@@ -1,6 +1,8 @@
 filter();
 
 function main() {
+	const node = api.std.node;
+
 	const mcfppfunctionsPath = `${context.config.outPath}/BP/mcfppfunctions`;
 
 	// filePath here is not including the outPath
@@ -17,7 +19,7 @@ function main() {
 			return;
 		}
 
-		const fullDirname = api.std.node.path.join(
+		const fullDirname = node.path.join(
 			context.config.outPath,
 			"BP/functions",
 			mcf.path || filePath.slice("BP/mcfppfunctions/".length, -".js".length)
@@ -27,8 +29,8 @@ function main() {
 			let mcfunction = "";
 			mcf.function(set, cmd => (mcfunction += cmd + "\n"));
 
-			api.std.node.fs.mkdirSync(fullDirname, { recursive: true });
-			api.std.node.fsPromises.writeFile(api.std.node.path.join(fullDirname, `${set}.mcfunction`), mcfunction); // write the function
+			node.fs.mkdirSync(fullDirname, { recursive: true });
+			node.fs.writeFileSync(node.path.join(fullDirname, `${set}.mcfunction`), mcfunction); // write the function
 		}
 	}
 
@@ -38,8 +40,9 @@ function main() {
 				.split(context.config.outPath + "/")
 				.slice(1)
 				.join(context.config.outPath + "/"),
-			Function(api.std.node.fs.readFileSync(filePath, "utf8"))()
+			Function(node.fs.readFileSync(filePath, "utf8"))()
 		);
 
-	api.std.node.fsPromises.rm(mcfppfunctionsPath, { recursive: true }); // delete mcfppfunctions
+	node.fs.rmSync(mcfppfunctionsPath, { recursive: true }); // delete mcfppfunctions
+	console.log("complete");
 }
