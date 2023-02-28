@@ -25,6 +25,19 @@ function main() {
 			mcf.path || filePath.slice("BP/mcfppfunctions/".length, -".js".length)
 		);
 
+		if (!mcf.sets) {
+			let mcfunction = "";
+			mcf.function(undefined, cmd => (mcfunction += cmd + "\n"));
+
+			const dirname = node.path.dirname(fullDirname);
+			const filename = node.path.basename(fullDirname);
+
+			node.fs.mkdirSync(dirname, { recursive: true });
+			node.fs.writeFileSync(node.path.join(dirname, `${filename}.mcfunction`), mcfunction); // write the function
+
+			return;
+		}
+
 		for (const set of mcf.sets) {
 			let mcfunction = "";
 			mcf.function(set, cmd => (mcfunction += cmd + "\n"));
@@ -44,5 +57,4 @@ function main() {
 		);
 
 	node.fs.rmSync(mcfppfunctionsPath, { recursive: true }); // delete mcfppfunctions
-	console.log("complete");
 }
